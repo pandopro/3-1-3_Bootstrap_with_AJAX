@@ -89,7 +89,9 @@ public class User implements UserDetails {
 
     @Transient
     public String getStringRoles() {
-        return Arrays.toString(getArrayOfRoles());
+        return Arrays.toString(getArrayOfRoles())
+                .replace("[", "")
+                .replace("]", "");
     }
 
     @Override

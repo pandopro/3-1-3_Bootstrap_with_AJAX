@@ -37,8 +37,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // указываем action с формы логина
                 .loginProcessingUrl("/login")
                 // Указываем параметры логина и пароля с формы логина
-                .usernameParameter("j_username")
-                .passwordParameter("j_password")
+                .usernameParameter("email")
+                .passwordParameter("password")
                 // даем доступ к форме логина всем
                 .permitAll();
 
@@ -58,7 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 //страницы аутентификаци доступна всем
                 .antMatchers("/login", "/demo").anonymous()
                 // защищенные URL
-                .antMatchers("/user/**").hasAnyAuthority("USER","ADMIN");
+                .antMatchers("/user/**").hasAnyAuthority("USER", "ADMIN");
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
                 .anyRequest().denyAll();

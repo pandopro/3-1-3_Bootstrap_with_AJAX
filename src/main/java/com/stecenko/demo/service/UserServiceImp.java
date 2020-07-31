@@ -59,11 +59,15 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void edit(Long id, User user) {
+        if (user.getRoles() == null) {
+            user.setRoles(userDao.findById(id).get().getRoles());
+        }
         if (user.getPassword().startsWith("$2a$10$") || user.getPassword().equals("")) {
-            user.setPassword(userDao.findByLogin(user.getLogin()).getPassword());
+            user.setPassword(userDao.findById(id).get().getPassword());
         } else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
         userDao.save(user);
     }
+
 }

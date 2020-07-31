@@ -10,6 +10,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.ArrayList;
+
 @Controller
 @RequestMapping("/")
 public class UserController {
@@ -21,7 +23,7 @@ public class UserController {
     public String demo(ModelMap model) {
         userService.demo();
         model.addAttribute("listz", userService.findAll());
-        return "list";
+        return "mainPage";
     }
 
     @GetMapping(value = "/login")
@@ -33,7 +35,11 @@ public class UserController {
     @GetMapping(value = "/user")
     public String getInfoAboutUser(ModelMap model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        model.addAttribute("user", user);
-        return "infoAboutUser";
+        model.addAttribute("authUser", user);
+        ArrayList<User> list = new ArrayList<>();
+        list.add(user);
+        model.addAttribute("listz", list);
+        return "user";
     }
+
 }
