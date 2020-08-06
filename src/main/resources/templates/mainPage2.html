@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">-->
+    <link href="/webjars/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+    <title>admin</title>
+    <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"-->
+    <!--          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">-->
+</head>
+<body>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<nav class="navbar  navbar-dark bg-dark">
+    <!-- Navbar content -->
+    <a class="navbar-brand" href="#">
+        <strong> <span th:text="${authUser.login}"></span></strong> with roles: <span
+            th:text="${authUser.stringRoles}"></span> </a>
+    <a class="nav-item " href="/logout">Logout</a>
+</nav>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2 mt-2 bg-light">
+            <!-- Content here -->
+            <nav class="d-none d-sm-block sidebar ">
+                <!-- Content here -->
+                <nav class="sidebar">
+                    <ul class="nav nav-pills nav-fill flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link  active"
+                               href="/admin/main">Admin</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/user">User</a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="col mt-3">
+                </div>
+            </nav>
+
+        </div>
+
+        <div class="col-sm bg-green">
+            <h1 class="h3 ml-3 mb-3 mt-2 font-bold"> Admin Panel</h1>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                       aria-controls="home" aria-selected="true">User table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                       aria-controls="profile" aria-selected="false">Add User</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+                    <table th:id="mainTable" class="table table-striped">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>City</th>
+                            <th>Email</th>
+
+                            <th>Roles</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody id="mainTableUsers">
+                        </tbody>
+                    </table>
+
+                    <!-- Modal -->
+                    <div class="modal" id="editModal"
+                         tabindex="-1"
+                         role="dialog"
+                         aria-labelledby="deleteModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form action="#"
+                                      method="post">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Edit
+                                            user</h5>
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+                                            <span aria-hidden="true">x</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group text-center">
+                                            <label for="editUserName" class="center-block">
+                                                <span class="font-weight-bold">Name</span>
+                                            </label>
+                                            <input type="text"
+                                                   class="form-control collection-ville text-center"
+                                                   id="editUserName"
+                                                   name="name"
+                                                   value="">
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <label for="editCity" class="center-block">
+                                                <span class="font-weight-bold">City</span>
+                                            </label>
+                                            <input type="text"
+                                                   class="form-control collection-ville text-center"
+                                                   id="editCity"
+                                                   name="City" value="">
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <label for="editEmail" class="center-block">
+                                                <span class="font-weight-bold">Email</span>
+                                            </label>
+                                            <input type="email"
+                                                   class="form-control collection-ville text-center"
+                                                   id="editEmail"
+                                                   name="Login" value="">
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <label for="editPassword" class="center-block">
+                                                <span class="font-weight-bold">Password</span>
+                                            </label>
+                                            <input type="password"
+                                                   class="form-control collection-ville text-center"
+                                                   id="editPassword"
+                                                   name="Password" value="">
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <label for="editRole" class="center-block">
+                                                <span class="font-weight-bold">Role</span>
+                                            </label>
+                                            <select id="editRole" class="form-control custom-select"
+                                                    size="2"
+                                                    name=""
+                                                    multiple="multiple">
+                                                <option value="USER">USER</option>
+                                                <option value="ADMIN">ADMIN</option>
+                                                <option value="ADMIN,USER">ADMIN,USER</option>
+                                            </select>
+                                            <input name="id" type="hidden" id="editIdUser"
+                                                   value="">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">
+                                                Close
+                                            </button>
+                                            <button class="btn btn-primary" type="button"
+                                                    name="edit"
+                                                    id="editButton"
+                                                    value="" onclick="editUser(this)">edit
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- Modal -->
+                    <div class="modal" id="deleteModal" tabindex="-1"
+                         role="dialog"
+                         aria-labelledby="deleteModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <form action="#"
+                                      th:name="person" method="post">
+
+                                    <div class="modal-header">
+                                        <h5 class="modal-title"
+                                            th:attr="id='deleteModal'">Delete
+                                            user</h5>
+                                        <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
+                                            <span aria-hidden="true">x</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group text-center">
+                                            <label for="deleteUserName" class="center-block">
+                                                <span class="font-weight-bold">Name</span>
+                                            </label>
+                                            <input type="text"
+                                                   class="form-control text-center"
+                                                   id="deleteUserName"
+                                                   name="name"
+                                                   value="" readonly="readonly">
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <label for="deleteCity" class="center-block">
+                                                <span class="font-weight-bold">City</span>
+                                            </label>
+                                            <input type="text"
+                                                   class="form-control text-center"
+                                                   id="deleteCity"
+                                                   name="City" value=""
+                                                   readonly="readonly">
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <label for="deleteEmail" class="center-block">
+                                                <span class="font-weight-bold">Email</span>
+                                            </label>
+                                            <input type="email"
+                                                   class="form-control text-center"
+                                                   id="deleteEmail"
+                                                   name="Login" value=""
+                                                   readonly="readonly">
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <input id="deleteIdUser" type="hidden"
+                                                   value="">
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <label for="deleteRole" class="center-block">
+                                                <span class="font-weight-bold">Role</span>
+                                            </label>
+                                            <select id="deleteRole" class="form-control custom-select" size="2"
+                                                    name="newRoles"
+                                                    multiple="multiple" readonly="readonly">
+                                                <option value="USER" readonly="readonly">USER</option>
+                                                <option value="ADMIN" readonly="readonly">ADMIN</option>
+                                                <option value="ADMIN,USER" readonly="readonly">ADMIN,USER
+                                                </option>
+                                            </select>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary"
+                                                    data-dismiss="modal">
+                                                Close
+                                            </button>
+                                            <button class="btn btn-danger"
+                                                    type="button"
+                                                    id="deleteButton"
+                                                    value=""
+                                                    onclick="deleteViaAjax(this)"
+                                            >delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="tab-pane fade " id="profile" role="tabpanel" aria-labelledby="profile-tab">
+
+                    <h1>add form</h1>
+                    <div class="row justify-content-center align-items-center">
+                        <div class="col-md-5 ">
+                            <div class="container text-center">
+                                <form th:id="addForm" align="center">
+                                    <div class="form-group">
+                                        <label for="addName" class=" font-weight-bold">Name</label>
+                                        <input type="text" class="form-control" id="addName"
+                                               aria-describedby="nameHelp" placeholder="Enter your name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="addCity" class=" font-weight-bold">City</label>
+                                        <input type="text" class="form-control" id="addCity"
+                                               aria-describedby="cityHelp" placeholder="Enter your city">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="addEmail" class=" font-weight-bold">Email</label>
+                                        <input type="email" class="form-control"
+                                               id="addEmail"
+                                               aria-describedby="cityHelp" placeholder="Enter your Email">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="addPassword" class=" font-weight-bold">Password</label>
+                                        <input type="password" class="form-control"
+                                               id="addPassword"
+                                               aria-describedby="passwordHelp" placeholder="Enter your Password">
+                                    </div>
+                                    <label for="addRole" class=" font-weight-bold">Roles:</label>
+                                    <select class="form-control custom-select" size="2" id="addRole"
+                                            th:name="newRoles"
+                                            multiple="multiple">
+                                        <option value="USER">USER</option>
+                                        <option value="ADMIN">ADMIN</option>
+                                        <option value="ADMIN,USER">ADMIN,USER</option>
+                                    </select>
+                                    <button type="button" onclick="addUser()" class="btn btn-success ">Add new user
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/webjars/jquery/3.3.1/jquery.min.js"></script>
+<script src="/webjars/jquery-ui/1.11.1/jquery-ui.min.js"></script>
+<script src="/webjars/popper.js/1.16.0/popper.min.js"></script>
+<script src="/webjars/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="/main.js"></script>
+</body>
+</html>

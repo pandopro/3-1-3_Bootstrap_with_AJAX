@@ -22,7 +22,6 @@ public class User implements UserDetails {
     private String password;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Role> roles;
-
     public User() {
     }
 
@@ -32,6 +31,19 @@ public class User implements UserDetails {
         this.login = login;
         this.password = password;
         this.roles = roles;
+    }
+
+    public User(String name, String city, String login, String password) {
+        this.name = name;
+        this.city = city;
+        this.login = login;
+        this.password = password;
+    }
+
+    @Transient
+    @Override
+    public String toString() {
+        return id + ", " + name + ", " + city + ", " + login + ", " + password + ", " + this.getStringRoles();
     }
 
     public Long getId() {

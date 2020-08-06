@@ -56,12 +56,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // делаем страницу регистрации недоступной для авторизированных пользователей
                 .authorizeRequests()
                 //страницы аутентификаци доступна всем
-                .antMatchers("/login", "/demo").anonymous()
+                .antMatchers("/login").anonymous()
+                .antMatchers("/webjars/**").permitAll()
+
                 // защищенные URL
                 .antMatchers("/user/**").hasAnyAuthority("USER", "ADMIN");
         http.authorizeRequests()
                 .antMatchers("/admin/**").hasAnyAuthority("ADMIN")
-                .anyRequest().denyAll();
+                .anyRequest().authenticated();
     }
 
     @Bean

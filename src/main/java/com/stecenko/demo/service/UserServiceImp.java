@@ -1,6 +1,4 @@
 package com.stecenko.demo.service;
-
-
 import com.stecenko.demo.dao.UserDAO;
 import com.stecenko.demo.model.Role;
 import com.stecenko.demo.model.User;
@@ -8,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -69,5 +66,4 @@ public class UserServiceImp implements UserService {
         }
         userDao.save(user);
     }
-
 }
