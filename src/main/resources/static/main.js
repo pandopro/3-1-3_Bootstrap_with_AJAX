@@ -37,22 +37,56 @@ function reloadTable() {
     })
 }
 
-function editUser(id) {
+// function editUser(id) {
+//     $.ajax("/rest/edit", {
+//         method: "put",
+//         //  contentType: "application/json; charset=utf-8",
+//         dataType: "json",
+//         data: {
+//             user: JSON.stringify({
+//                 id: $("#editIdUser").val(),
+//                 name: $("#editUserName").val(),
+//                 city: $("#editCity").val(),
+//                 login: $("#editEmail").val(),
+//                 password: $("#editPassword").val(),
+//             }),
+//             roles: JSON.stringify($("#editRole").val()),
+//         },
+//         // "roles": JSON.stringify($("#editRole").val())
+//
+//
+//         success: function (data) {
+//             console.log("SUCCESS: ", data);
+//             reloadTable();
+//             $(".modal").modal('hide');
+//
+//         },
+//         error: function (e) {
+//             console.log("ERROR: ", e);
+//         },
+//         done: function (e) {
+//             console.log("DONE");
+//         }
+//     })
+// }
+
+
+function editUser() {
+    var userE = new Object();
+    userE.name = $("#editUserName").val();
+    userE.city = $("#editCity").val();
+    userE.login = $("#editEmail").val();
+    userE.password = $("#editPassword").val();
+    userE.id = $("#editIdUser").val();
     $.ajax("/rest/edit", {
         method: "put",
-        data: {
-            user: JSON.stringify(
-                {
-                    id: $("#editIdUser").val(),
-                    name: $("#editUserName").val(),
-                    city: $("#editCity").val(),
-                    login: $("#editEmail").val(),
-                    password: $("#editPassword").val(),
-                }),
-            roles: JSON.stringify($("#editRole").val())
-
-        },
+        //contentType: "application/json; charset=utf-8",
         dataType: "json",
+        data: {
+            user: JSON.stringify(userE),
+            roles: JSON.stringify($("#editRole").val()),
+        },
+
         success: function (data) {
             console.log("SUCCESS: ", data);
             reloadTable();

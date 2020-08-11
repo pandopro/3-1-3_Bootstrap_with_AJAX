@@ -5,6 +5,9 @@ import com.stecenko.demo.model.Role;
 import com.stecenko.demo.model.User;
 import com.stecenko.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -17,21 +20,21 @@ public class RESTController {
     public UserService userService;
 
     @DeleteMapping("/delete/{id}")
-    public String Delete(@PathVariable(value = "id") String idForDel) {
-        System.out.println("------------------------Delete------ping " + idForDel);
-        userService.deleteById(Long.parseLong(idForDel));
-        return idForDel;
+    public ResponseEntity<String> Delete(@RequestBody long idForDel) {
+        //   System.out.println("------------------------Delete------ping " + idForDel);
+        userService.deleteById(idForDel);
+
+        return new ResponseEntity(idForDel, new HttpHeaders(), HttpStatus.OK);
     }
 
     @GetMapping("/all")
-    public String getUsers() {
-        Gson gson = new Gson();
-        String json = gson.toJson(userService.findAll());
-        return json;
+    public ResponseEntity<Iterable<User>> getUsers() {
+        return new ResponseEntity<>(userService.findAll(), new HttpHeaders(), HttpStatus.OK);
+
     }
 
-    @PutMapping("/edit")
-    public Boolean edit(String user, String roles) {
+    @PutMapping(value = "/edit")
+    public ResponseEntity<String> edit(String user, String roles) {
         Gson gson = new Gson();
         User newUser = gson.fromJson(user, User.class);
         String[] newRoles = gson.fromJson(roles, String[].class);
@@ -47,20 +50,18 @@ public class RESTController {
             }
             newUser.setRoles(setRoles);
         }
+
         userService.edit(newUser.getId(), newUser);
-        return true;
+        return new ResponseEntity<>("true", new HttpHeaders(), HttpStatus.OK);
     }
 
     @PostMapping("/get")
-    public String getUser(@RequestBody String id) {
-        Gson gson = new Gson();
-        String json = gson.toJson(userService.findById(Long.parseLong(id)));
-        return json;
+    public ResponseEntity<User> getUser(@RequestBody long id) {
+        return new ResponseEntity(userService.findById(id), new HttpHeaders(), HttpStatus.OK);
     }
 
     @PostMapping("/add")
-    public String addUser(String user, String roles) {
-        System.out.println("------------------------------add " + user + " ||| " + roles);
+    public ResponseEntity<String> addUser(String user, String roles) {
         Gson gson = new Gson();
         User newUser = gson.fromJson(user, User.class);
         String[] newRoles = gson.fromJson(roles, String[].class);
@@ -70,7 +71,6 @@ public class RESTController {
         }
         newUser.setRoles(setRoles);
         userService.save(newUser);
-        System.out.println("Итог  " + newUser.toString());
-        return newUser.getId().toString();
+        return new ResponseEntity<>(newUser.getId().toString(), new HttpHeaders(), HttpStatus.OK);
     }
 }

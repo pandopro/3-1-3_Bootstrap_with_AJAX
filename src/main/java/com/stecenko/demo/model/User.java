@@ -90,13 +90,17 @@ public class User implements UserDetails {
 
     @Transient
     public String[] getArrayOfRoles() {
-        String[] arrRoles = new String[roles.size()];
-        Iterator<Role> iter = roles.iterator();
-        int i = 0;
-        while (iter.hasNext()) {
-            arrRoles[i++] = iter.next().getRole();
+        try {
+            String[] arrRoles = new String[roles.size()];
+            Iterator<Role> iter = roles.iterator();
+            int i = 0;
+            while (iter.hasNext()) {
+                arrRoles[i++] = iter.next().getRole();
+            }
+            return arrRoles;
+        } catch (Exception e) {
+            return new String[]{"fatal_error"};
         }
-        return arrRoles;
     }
 
     @Transient

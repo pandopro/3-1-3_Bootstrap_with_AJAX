@@ -44,7 +44,7 @@ public class UserController {
         model.addAttribute("listz", userService.findAll());
         User authUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         model.addAttribute("authUser", authUser);
-        model.addAttribute("user", new User());
+        model.addAttribute("userEditObj", new User());
         return "mainPage2";
 
     }
