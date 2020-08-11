@@ -78,28 +78,25 @@ function editUser() {
     userE.login = $("#editEmail").val();
     userE.password = $("#editPassword").val();
     userE.id = $("#editIdUser").val();
-    $.ajax("/rest/edit", {
-        method: "put",
-        //contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        data: {
-            user: JSON.stringify(userE),
-            roles: JSON.stringify($("#editRole").val()),
-        },
+    userE.roles = $("#editRole").val(),
+        $.ajax("/rest/edit", {
+            method: "put",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: JSON.stringify(userE),
 
-        success: function (data) {
-            console.log("SUCCESS: ", data);
-            reloadTable();
-            $(".modal").modal('hide');
-
-        },
-        error: function (e) {
-            console.log("ERROR: ", e);
-        },
-        done: function (e) {
-            console.log("DONE");
-        }
-    })
+            success: function (data) {
+                console.log("SUCCESS: ", data);
+                reloadTable();
+                $(".modal").modal('hide');
+            },
+            error: function (e) {
+                console.log("ERROR: ", e);
+            },
+            done: function (e) {
+                console.log("DONE");
+            }
+        })
 }
 
 function loadUserForEdit(obj) {
@@ -117,7 +114,7 @@ function loadUserForEdit(obj) {
             $("#editCity").val(user.city);
             $("#editEmail").val(user.login);
             $("#editPassword").val(user.password);
-            $("#editRole").val(user.role);
+            $("#editRole").val(user.roles);
             $("#editIdUser").val(user.id);
             $("#editButton").val(user.id);
         },
@@ -161,16 +158,17 @@ function loadUserForDelete(obj) {
 function addUser() {
     $.ajax("/rest/add", {
         method: "post",
-        data: {
-            user: JSON.stringify(
-                {
-                    name: $("#addName").val(),
-                    city: $("#addCity").val(),
-                    login: $("#addEmail").val(),
-                    password: $("#addPassword").val(),
-                }),
-            roles: JSON.stringify($("#addRole").val())
-        },
+        contentType: "application/json",
+        data: JSON.stringify(
+            {
+                name: $("#addName").val(),
+                city: $("#addCity").val(),
+                login: $("#addEmail").val(),
+                password: $("#addPassword").val(),
+                roles: $("#addRole").val()
+            }),
+
+
         dataType: "json",
         success: function (data) {
             console.log("SUCCESS: ", data);

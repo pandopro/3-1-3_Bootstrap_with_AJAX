@@ -1,4 +1,5 @@
 package com.stecenko.demo.service;
+
 import com.stecenko.demo.dao.UserDAO;
 import com.stecenko.demo.model.Role;
 import com.stecenko.demo.model.User;
@@ -6,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collections;
 import java.util.HashSet;
 
@@ -55,12 +57,12 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void edit(Long id, User user) {
+    public void edit(User user) {
         if (user.getRoles() == null) {
-            user.setRoles(userDao.findById(id).get().getRoles());
+            user.setRoles(userDao.findById(user.getId()).get().getRoles());
         }
         if (user.getPassword().startsWith("$2a$10$") || user.getPassword().equals("")) {
-            user.setPassword(userDao.findById(id).get().getPassword());
+            user.setPassword(userDao.findById(user.getId()).get().getPassword());
         } else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }

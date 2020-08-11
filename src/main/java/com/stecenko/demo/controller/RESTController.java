@@ -2,7 +2,6 @@ package com.stecenko.demo.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.stecenko.demo.model.Role;
 import com.stecenko.demo.model.User;
 import com.stecenko.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/rest")
@@ -23,42 +19,22 @@ public class RESTController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> Delete(@RequestBody long idForDel) {
-        //   System.out.println("------------------------Delete------ping " + idForDel);
         userService.deleteById(idForDel);
-
         return new ResponseEntity(idForDel, new HttpHeaders(), HttpStatus.OK);
     }
 
     @GetMapping("/all")
     public ResponseEntity<Iterable<User>> getUsers() {
         return new ResponseEntity<>(userService.findAll(), new HttpHeaders(), HttpStatus.OK);
-
     }
 
     @PutMapping(value = "/edit")
-    public ResponseEntity<String> edit(String user, String roles) {
-        try {
-            User newUser = objectMapper.readValue(user, User.class);
-            String[] newRoles = objectMapper.readValue(roles, String[].class);
-
-            if ("[]".equals(roles)) {
-                newUser.setRoles(
-                        userService.findById(
-                                newUser.getId()
-                        ).getRoles());
-            } else {
-                Set<Role> setRoles = new HashSet<>();
-                for (String s : newRoles[0].split(",")) {
-                    setRoles.add(new Role(s));
-                }
-                newUser.setRoles(setRoles);
-            }
-            userService.edit(newUser.getId(), newUser);
-            return new ResponseEntity<>("true", new HttpHeaders(), HttpStatus.OK);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+    public ResponseEntity<String> edit(@RequestBody User user) throws JsonProcessingException {
+        if ("".equals(user.getStringRoles())) {
+            user.setRoles(userService.findById(user.getId()).getRoles());
         }
-        return new ResponseEntity<>("false", new HttpHeaders(), HttpStatus.OK);
+        userService.edit(user);
+        return new ResponseEntity<>("true", new HttpHeaders(), HttpStatus.OK);
     }
 
     @PostMapping("/get")
@@ -67,20 +43,8 @@ public class RESTController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addUser(String user, String roles) {
-        try {
-            User newUser = objectMapper.readValue(user, User.class);
-            String[] newRoles = objectMapper.readValue(roles, String[].class);
-            Set<Role> setRoles = new HashSet<>();
-            for (String s : newRoles[0].split(",")) {
-                setRoles.add(new Role(s));
-            }
-            newUser.setRoles(setRoles);
-            userService.save(newUser);
-            return new ResponseEntity<>(newUser.getId().toString(), new HttpHeaders(), HttpStatus.OK);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-        return new ResponseEntity<String>("error", new HttpHeaders(), HttpStatus.OK);
+    public ResponseEntity<String> addUser(@RequestBody User user) {
+        userService.save(user);
+        return new ResponseEntity<>(user.getId().toString(), new HttpHeaders(), HttpStatus.OK);
     }
 }
