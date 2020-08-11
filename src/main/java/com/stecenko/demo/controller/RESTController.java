@@ -1,6 +1,7 @@
 package com.stecenko.demo.controller;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stecenko.demo.model.Role;
 import com.stecenko.demo.model.User;
 import com.stecenko.demo.service.UserService;
@@ -18,6 +19,7 @@ import java.util.Set;
 public class RESTController {
     @Autowired
     public UserService userService;
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> Delete(@RequestBody long idForDel) {
@@ -35,24 +37,28 @@ public class RESTController {
 
     @PutMapping(value = "/edit")
     public ResponseEntity<String> edit(String user, String roles) {
-        Gson gson = new Gson();
-        User newUser = gson.fromJson(user, User.class);
-        String[] newRoles = gson.fromJson(roles, String[].class);
-        if ("[]".equals(roles)) {
-            newUser.setRoles(
-                    userService.findById(
-                            newUser.getId()
-                    ).getRoles());
-        } else {
-            Set<Role> setRoles = new HashSet<>();
-            for (String s : newRoles[0].split(",")) {
-                setRoles.add(new Role(s));
-            }
-            newUser.setRoles(setRoles);
-        }
+        try {
+            User newUser = objectMapper.readValue(user, User.class);
+            String[] newRoles = objectMapper.readValue(roles, String[].class);
 
-        userService.edit(newUser.getId(), newUser);
-        return new ResponseEntity<>("true", new HttpHeaders(), HttpStatus.OK);
+            if ("[]".equals(roles)) {
+                newUser.setRoles(
+                        userService.findById(
+                                newUser.getId()
+                        ).getRoles());
+            } else {
+                Set<Role> setRoles = new HashSet<>();
+                for (String s : newRoles[0].split(",")) {
+                    setRoles.add(new Role(s));
+                }
+                newUser.setRoles(setRoles);
+            }
+            userService.edit(newUser.getId(), newUser);
+            return new ResponseEntity<>("true", new HttpHeaders(), HttpStatus.OK);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return new ResponseEntity<>("false", new HttpHeaders(), HttpStatus.OK);
     }
 
     @PostMapping("/get")
@@ -62,15 +68,19 @@ public class RESTController {
 
     @PostMapping("/add")
     public ResponseEntity<String> addUser(String user, String roles) {
-        Gson gson = new Gson();
-        User newUser = gson.fromJson(user, User.class);
-        String[] newRoles = gson.fromJson(roles, String[].class);
-        Set<Role> setRoles = new HashSet<>();
-        for (String s : newRoles[0].split(",")) {
-            setRoles.add(new Role(s));
+        try {
+            User newUser = objectMapper.readValue(user, User.class);
+            String[] newRoles = objectMapper.readValue(roles, String[].class);
+            Set<Role> setRoles = new HashSet<>();
+            for (String s : newRoles[0].split(",")) {
+                setRoles.add(new Role(s));
+            }
+            newUser.setRoles(setRoles);
+            userService.save(newUser);
+            return new ResponseEntity<>(newUser.getId().toString(), new HttpHeaders(), HttpStatus.OK);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
-        newUser.setRoles(setRoles);
-        userService.save(newUser);
-        return new ResponseEntity<>(newUser.getId().toString(), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<String>("error", new HttpHeaders(), HttpStatus.OK);
     }
 }
