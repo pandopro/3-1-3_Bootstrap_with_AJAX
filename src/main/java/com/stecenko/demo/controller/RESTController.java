@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class RESTController {
     @Autowired
     public UserService userService;
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> Delete(@RequestBody long idForDel) {
